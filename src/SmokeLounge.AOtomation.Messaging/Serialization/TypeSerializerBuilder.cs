@@ -1,6 +1,6 @@
 // --------------------------------------------------------------------------------------------------------------------
 // <copyright file="TypeSerializerBuilder.cs" company="SmokeLounge">
-//   Copyright © 2013 SmokeLounge.
+//   Copyright ï¿½ 2013 SmokeLounge.
 //   This program is free software. It comes without any warranty, to
 //   the extent permitted by applicable law. You can redistribute it
 //   and/or modify it under the terms of the Do What The Fuck You Want
@@ -82,6 +82,10 @@ namespace SmokeLounge.AOtomation.Messaging.Serialization
         public Expression BuildSerializer(
             ParameterExpression streamWriterExpression, ParameterExpression serializationContextExpression)
         {
+            // if (type == typeof(CreateCharacterMessage) || type == typeof(CharacterListMessage))
+            // {
+            //     System.Diagnostics.Debugger.Break();
+            // }
             var objectParam = Expression.Parameter(typeof(object), "object");
             var objectToSerialize = Expression.Variable(this.type, "serializerVar");
 
@@ -220,6 +224,10 @@ namespace SmokeLounge.AOtomation.Messaging.Serialization
 
         private PropertyMetaData[] InitializePropertyMetas()
         {
+            // if (this.type == typeof(CreateCharacterMessage))
+            // {
+            //     System.Diagnostics.Debugger.Break();
+            // }
             var baseType = this.type;
             var stack = new Stack<Type>();
             do

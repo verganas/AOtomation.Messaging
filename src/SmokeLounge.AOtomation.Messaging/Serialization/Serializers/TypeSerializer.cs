@@ -17,6 +17,7 @@ namespace SmokeLounge.AOtomation.Messaging.Serialization.Serializers
     using System;
     using System.Linq.Expressions;
 
+    using SmokeLounge.AOtomation.Messaging.Messages.SystemMessages;
     public class TypeSerializer : ISerializer
     {
         #region Fields
@@ -112,7 +113,16 @@ namespace SmokeLounge.AOtomation.Messaging.Serialization.Serializers
             object value, 
             PropertyMetaData propertyMetaData = null)
         {
-            this.SerializerLambda(streamWriter, serializationContext, value);
+            if (this.type == typeof(CreateCharacterMessage))
+            {
+                System.Diagnostics.Debugger.Break();
+            }
+            // auto to assignment kanei generate kai compile to lambda apo ta linq expression. einai lazy operation
+            var lambda = this.SerializerLambda; 
+            // edo an prospathiseis na kaneis step-into, den ginetai
+            // an kaneis disable sto debug configuration toy VS to -> not step into properties tha deis oti o debuger
+            // sou deixnei to kodika poy kaleitai apo to lambda, alla oxi ton kodika to lambda
+            lambda(streamWriter, serializationContext, value);
         }
 
         public Expression SerializerExpression(
@@ -145,6 +155,10 @@ namespace SmokeLounge.AOtomation.Messaging.Serialization.Serializers
             var writerParam = Expression.Parameter(typeof(StreamWriter), "streamWriter");
             var optionsParam = Expression.Parameter(typeof(SerializationContext), "serializationContext");
 
+            // if (this.type == typeof(CreateCharacterMessage))
+            // {
+            //     System.Diagnostics.Debugger.Break();
+            // }
             var expression = this.typeSerializerBuilder.BuildSerializer(writerParam, optionsParam);
             return expression;
         }

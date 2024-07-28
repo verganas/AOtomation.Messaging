@@ -299,6 +299,32 @@ namespace SmokeLounge.AOtomation.Messaging.Tests
             Assert.AreEqual(expected.ServerPort, actual.ServerPort);
         }
 
+        [TestMethod]
+        public void CreateCharacterMessageTest()
+        {
+            var expected = new CreateCharacterMessage
+           {
+               Unknown1 = null, // Auto einai to "bug", prepei na kaneis init byte array
+               Name = "verganas",
+               AreaName = "unknown area",
+               Breed = Breed.Nanomage,
+               Fatness = Fatness.Fat,
+               Gender = Gender.Female,
+               HeadMesh = 4711,
+               Level = 1,
+               MonsterScale = 0x64,
+               Profession = Profession.Keeper,
+               StarterArea = StarterArea.RubiKa
+           };
+
+            var actual = (CreateCharacterMessage)this.SerializeDeserialize(expected);
+
+            this.AssertSystemMessage(expected, actual);
+            Assert.AreEqual(expected.Name, actual.Name);
+            Assert.AreEqual(expected.AreaName, actual.AreaName);
+            Assert.AreEqual(expected.Breed, actual.Breed);
+        }
+
         #endregion
 
         #region Methods
@@ -342,7 +368,8 @@ namespace SmokeLounge.AOtomation.Messaging.Tests
         private object SerializeDeserialize(object obj)
         {
             MemoryStream memoryStream = null;
-
+            
+            //var serializerResolver = new DebuggingSerializerResolverBuilder<MessageBody>().Build();
             var serializerResolver = new SerializerResolverBuilder<MessageBody>().Build();
             var serializer = serializerResolver.GetSerializer(obj.GetType());
 
